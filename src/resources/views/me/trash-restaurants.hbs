@@ -1,0 +1,99 @@
+<div class="mt-4">
+    <div>
+      <a href="/me/stored/restaurants">Danh sách nhà hàng</a>
+      <h3>Nhà hàng đã xóa</h3>
+    </div>  
+
+    <table class="table mt-4">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Tên nhà hàng học</th>
+      <th scope="col">Mô tả</th>
+      <th scope="col" colspan="2">Thời gian xóa</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each restaurants}}
+    <tr>
+      <th scope="row">{{sum @index 1}}</th>
+      <td>{{this.res_name}}</td>
+      <td>{{this.desc}}</td>
+      <td>{{this.deletedAt}}</td>
+      <td>
+        <a href="" class="btn btn-link btn-restore" data-id="{{this.res_id}}">Khôi phục</a>
+        <a href="" class="btn btn-link" data-id="{{this.res_id}}" data-bs-toggle="modal" data-bs-target="#delete-restaurant-modal">Xóa vĩnh viễn</a>
+      </td>
+    </tr>
+
+    {{else}}
+    <tr>
+      <td colspan="5" class="text-center">
+        Chưa có nhà hàng nào được xóa.
+      </td>
+    </tr>
+
+    {{/each}}
+  </tbody>
+</table>
+</div>
+
+
+{{!-- Confirm delete restaurant --}}
+<div class="modal fade" id="delete-restaurant-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Xóa nhà hàng vĩnh viễn?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Hành động này không thể khôi phục.</p>
+        <p>Bạn vẫn muốn xóa nhà hàng này chứ?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-restaurant" type="button" class="btn btn-primary btn-danger">Xóa vĩnh viễn</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<form name="delete-restaurant-form" method="POST"></form>
+<form name="restore-restaurant-form" method="POST"></form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let restaurantID;
+    const deleteForm = document.forms['delete-restaurant-form'];
+    const restoreForm = document.forms['restore-restaurant-form'];
+    const buttonDeleteRestaurant = document.querySelector('#btn-delete-restaurant');
+    const deleteRestaurantModal = document.querySelector('#delete-restaurant-modal');
+    const restoreBtnAll = document.querySelectorAll('.btn-restore');
+
+    // When dialog confirm clicked
+    deleteRestaurantModal.addEventListener('show.bs.modal', (event) => {
+      restaurantID = event.relatedTarget.getAttribute("data-id");
+    });
+
+    // When delete restaurant btn clicked
+    buttonDeleteRestaurant.addEventListener('click', () => {
+      deleteForm.action = '/restaurants/' + restaurantID + '/force?_method=DELETE';
+      deleteForm.submit();
+    })
+
+    // Restore btn clicked
+    restoreBtnAll.forEach(restoreBtn => {
+      restoreBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+
+        restaurantID = restoreBtn.getAttribute("data-id");
+        restoreForm.action = '/restaurants/' + restaurantID + '/restore?_method=PATCH';
+        restoreForm.submit();
+      })
+    })
+  })
+
+</script>

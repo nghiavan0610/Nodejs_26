@@ -1,0 +1,70 @@
+
+<div class="mt-4">
+    <h3>{{user.user_name}}</h3>
+
+
+
+<div class="mt-4">
+    <div class="row">
+        {{#each detailRestaurant}}
+        <div class="col-sm-6 col-lg-4">
+        <div class="card" style="width: 18rem;">
+        <a href="/restaurants/{{this.slug}}">
+            <img src="{{this.image}}" class="card-img-top mt-3" alt="{{this.res_name}}">
+        </a>
+        <div class="card-body">
+            <a href="/restaurants/{{this.slug}}">{{this.res_name}}</a>
+            <p class="card-text">{{this.desc}}</p>
+
+           
+            <button type="button" data-id="{{this.res_id}}" value="{{this.likedRestaurants}}" class="btn-like">Like</button>
+
+            
+          
+
+        </div>
+        </div>
+        </div>
+        {{/each}}
+
+    </div>
+</div>
+</div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+  const likeForm = document.forms['like-restaurant-form'];
+  const likeBtnAll = document.querySelectorAll('.btn-like');
+  const url = window.location.href;
+  
+  likeBtnAll.forEach(likeBtn => {
+    likeBtn.innerHTML = likeBtn.value == 1  ? 'Liked' : 'Like';
+
+    likeBtn.addEventListener('click', async (event) => {  
+      event.preventDefault();
+      const res_id = event.currentTarget.getAttribute('data-id');
+
+      const result = await fetch('/users/' + url.split('/').pop() + '/likeResAction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({res_id}),
+      })
+
+      const {liked} = await result.json();
+
+      likeBtn.innerHTML = liked ? 'Liked' : 'Like';
+  })
+})
+})
+
+
+</script>
+
+
+
+
+

@@ -1,0 +1,92 @@
+<div class="mt-4">
+    <div class="navigation-container">
+      <h3>Danh sách người dùng</h3>
+      <div class="navigation-right">
+      <a href="/users/create">Tạo người dùng</a>
+      <a href="/me/trash/users">Thùng rác ({{deletedCount}})</a>
+    </div>
+    </div>
+
+    <table class="table mt-4">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Họ tên</th>
+      <th scope="col">Email</th>
+      <th scope="col">Tổng số nhà hàng đã like</th>
+      <th scope="col" colspan="2">Thời gian tạo</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each users}}
+    <tr>
+      <th scope="row">{{sum @index 1}}</th>
+      <td><a href="/users/{{this.user_id}}">{{this.user_name}}</a></td>
+      <td>{{this.email}}</td>
+      <td>{{this.new}}</td>
+      <td>{{this.createdAt}}</td>
+      <td>
+        <a href="/users/{{this.user_id}}/edit" class="btn btn-link">Sửa</a>
+        <a href="" class="btn btn-link" data-id="{{this.user_id}}" data-bs-toggle="modal" data-bs-target="#delete-user-modal">Xóa</a>
+      </td>
+    </tr>
+
+    {{else}}
+    <tr>
+      <td colspan="5" class="text-center">
+        Không có người dùng nào trong hệ thống.
+        <a href="/users/create">Tạo người dùng</a>
+      </td>
+    </tr>
+
+    {{/each}}
+  </tbody>
+</table>
+</div>
+
+
+
+{{!-- Confirm delete user --}}
+<div class="modal fade" id="delete-user-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Xóa người dùng?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc muốn xóa người dùng này chứ?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-user" type="button" class="btn btn-primary btn-danger">Xóa bỏ</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<form name="delete-user-form" method="POST"></form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let userID;
+    const deleteForm = document.forms['delete-user-form'];
+    const buttonDeleteUser = document.querySelector('#btn-delete-user');
+    const deleteUserModal = document.querySelector('#delete-user-modal');
+
+    // When dialog confirm clicked
+    deleteUserModal.addEventListener('show.bs.modal', (event) => {
+      userID = event.relatedTarget.getAttribute("data-id");
+    });
+
+    // When delete user btn clicked
+    buttonDeleteUser.addEventListener('click', () => {
+      deleteForm.action = '/users/' + userID + '?_method=DELETE';
+      deleteForm.submit();
+    })
+
+  })
+
+</script>
