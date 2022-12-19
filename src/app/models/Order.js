@@ -1,13 +1,19 @@
 const { DataTypes, Model } = require('sequelize');
 const { sequelize } = require('../../config/db');
-
-const Restaurant = require('./Restaurant');
 const User = require('./User');
 
-class Like_res extends Model {}
+class Order extends Model {}
 
-Like_res.init(
+Order.init(
   {
+    order_id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      field: 'order_id',
+      allowNull: false,
+      autoIncrement: true,
+      unique: true,
+    },
     user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -16,45 +22,36 @@ Like_res.init(
         key: 'user_id',
       },
     },
-    res_id: {
-      type: DataTypes.INTEGER,
+    total_price: {
+      type: DataTypes.FLOAT,
       allowNull: false,
-      references: {
-        model: Restaurant,
-        key: 'res_id',
-      },
+    },
+    discount: {
+      type: DataTypes.FLOAT,
+    },
+    status: {
+      type: DataTypes.STRING,
     },
   },
   {
     sequelize,
     freezeTableName: true,
-    modelName: 'Like_res',
-    tableNames: 'like_res',
+    modelName: 'Order',
+    tableNames: 'orders',
     timestamps: true,
+    paranoid: true,
   },
 );
 
 // Associations
-Restaurant.hasMany(Like_res, {
-  sourceKey: 'res_id',
-  foreignKey: 'res_id',
-  onDelete: 'CASCADE',
-  hooks: true,
-});
-Like_res.belongsTo(Restaurant, {
-  foreignKey: 'res_id',
-});
-
-User.hasMany(Like_res, {
+User.hasMany(Order, {
   sourceKey: 'user_id',
   foreignKey: 'user_id',
   onDelete: 'CASCADE',
   hooks: true,
 });
-Like_res.belongsTo(User, {
+Order.belongsTo(User, {
   foreignKey: 'user_id',
 });
 
-
-
-module.exports = Like_res;
+module.exports = Order;

@@ -7,26 +7,20 @@ const { multipleSequelizeToJSON } = require('../../ulti/sequelize');
 class SiteController {
   // [GET] /
   index(req, res, next) {
-    Restaurant.findAll()
+    sequelize
+      .query(
+        'select res_id, res_name, `desc`, slug, image, (select count(user_id) from Like_res where Like_res.res_id = Restaurant.res_id) as totalLike, (select cast(avg(rating) as decimal(2,1)) from Rate_res where Rate_res.res_id = Restaurant.res_id) as rating from Restaurant',
+        {
+          type: QueryTypes.SELECT,
+        },
+      )
       .then((restaurants) =>
         res.render('home', {
-          restaurants: multipleSequelizeToJSON(restaurants),
+          restaurants,
         }),
       )
       .catch(next);
   }
-
-  // // [GET] /
-  // index = async(req,res) => {
-  //     try{
-  //         const restaurants = await sequelize.query("select * from Restaurant", {
-  //             type: QueryTypes.SELECT
-  //         });
-  //         res.render('home', {restaurants});
-  //     }catch(err){
-  //         res.send(err)
-  //     }
-  // }
 }
 
 module.exports = new SiteController();

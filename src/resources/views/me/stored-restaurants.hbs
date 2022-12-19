@@ -2,8 +2,8 @@
     <div class="navigation-container">
       <h3>Danh sách nhà hàng</h3>
       <div class="navigation-right">
-      <a href="/restaurants/create">Tạo nhà hàng</a>
-      <a href="/me/trash/restaurants">Thùng rác ({{deletedCount}}) </a>
+      <button><a href="/restaurants/create">Tạo nhà hàng</a></button>
+      <button><a href="/me/trash/restaurants">Thùng rác ({{deletedCount}}) </a></button>
       </div>
     </div>
 
@@ -20,7 +20,7 @@
     {{#each restaurants}}
     <tr>
       <th scope="row">{{sum @index 1}}</th>
-      <td>{{this.res_name}}</td>
+      <td><a href="/restaurants/{{this.slug}}/foods">{{this.res_name}}</a></td>
       <td>{{this.desc}}</td>
       <td>{{this.createdAt}}</td>
       <td>

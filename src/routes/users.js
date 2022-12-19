@@ -13,5 +13,8 @@ router.patch('/:user_id/restore', usersController.restore);
 
 router.get('/:user_id', usersController.show);
 router.post('/:user_id/likeResAction', usersController.likeResAction);
+router.put('/:user_id/rateResAction', usersController.rateResAction);
+
+// router.post('/:user_id/order', usersController.order);
 
 module.exports = router;

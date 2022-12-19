@@ -13,25 +13,20 @@ Rate_res.init(
       allowNull: false,
       references: {
         model: User,
-        key: 'user_id'
-      }
+        key: 'user_id',
+      },
     },
     res_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: Restaurant,
-        key: 'res_id'
-      }
+        key: 'res_id',
+      },
     },
-    amount: {
+    rating: {
       type: DataTypes.INTEGER(1),
       allowNull: false,
-    },
-    date_rate: {
-      type: DataTypes.DATE,
-      allowNull: false,
-      primaryKey: true,
     },
   },
   {
@@ -39,12 +34,15 @@ Rate_res.init(
     freezeTableName: true,
     modelName: 'Rate_res',
     tableNames: 'rate_res',
-    timestamps: false,
+    timestamps: true,
   },
 );
 
+// Associations
 Restaurant.hasMany(Rate_res, {
   foreignKey: 'res_id',
+  onDelete: 'CASCADE',
+  hooks: true,
 });
 Rate_res.belongsTo(Restaurant, {
   foreignKey: 'res_id',
@@ -52,6 +50,8 @@ Rate_res.belongsTo(Restaurant, {
 
 User.hasMany(Rate_res, {
   foreignKey: 'user_id',
+  onDelete: 'CASCADE',
+  hooks: true,
 });
 Rate_res.belongsTo(User, {
   foreignKey: 'user_id',

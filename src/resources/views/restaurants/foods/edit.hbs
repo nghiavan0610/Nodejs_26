@@ -1,0 +1,38 @@
+<div class="mt-4">
+    <h1>{{resName}}</h1>
+    <h3>Sửa món ăn</h3>
+
+<form method="POST" action="/restaurants/{{resSlug}}/foods/{{food.food_id}}?_method=PUT">
+
+<select class="form-group" id="type_id" name="type_id">
+  <option value="{{food.type_id}}">{{food.Food_type.type_name}}</option>
+  {{#each food_types}}
+  <option value="{{this.type_id}}">{{this.type_name}}</option>
+  {{/each}}
+</select>
+
+  <div class="form-group">
+    <label for="food_name">Tên món ăn</label>
+    <input type="text" class="form-control" value="{{food.food_name}}" id="food_name" name="food_name">
+  </div>
+
+  <div class="form-group">
+    <label for="desc">Mô tả</label>
+    <textarea class="form-control" id="desc" name="desc">{{food.desc}}</textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="price">Giá</label>
+    <input type="text" class="form-control" value="{{food.price}}" id="price" name="price">
+  </div>
+
+  <div class="form-group">
+    <label for="image">Hình ảnh</label>
+    <input type="text" class="form-control" value="{{food.image}}" id="image" name="image">
+  </div>
+
+
+  <button type="submit" class="btn btn-primary mt-4">Lưu lại</button>
+</form>
+
+</div>

@@ -1,6 +1,9 @@
 const { DataTypes, Model } = require('sequelize');
 const { sequelize } = require('../../config/db');
+
 const SequelizeSlugify = require('sequelize-slugify');
+const bcrypt = require('bcrypt');
+
 
 class User extends Model {}
 
@@ -16,15 +19,21 @@ User.init(
     },
     user_name: {
       type: DataTypes.STRING,
+      unique: true,
       allowNull: false,
       field: 'full_name',
     },
     email: {
       type: DataTypes.STRING,
+      allowNull: false,
       unique: true,
+      validate: {
+        isEmail: true,
+      }
     },
     password: {
       type: DataTypes.STRING,
+      allowNull: false,
     },
     slug: {
       type: DataTypes.STRING,
@@ -53,5 +62,7 @@ SequelizeSlugify.slugifyModel(User, {
   column: 'slug',
   bulkUpdate: true,
 });
+
+
 
 module.exports = User;

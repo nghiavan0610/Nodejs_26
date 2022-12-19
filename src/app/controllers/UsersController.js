@@ -1,6 +1,7 @@
+const Restaurant = require('../models/Restaurant');
 const User = require('../models/User');
 const Like_res = require('../models/Like_res');
-const Restaurant = require('../models/Restaurant');
+const Rate_res = require('../models/Rate_res');
 const { QueryTypes, Op, where } = require('sequelize');
 const { sequelize } = require('../../config/db');
 
@@ -17,12 +18,8 @@ class UsersController {
 
   // [POST] /users/store
   store(req, res, next) {
-    if ((req.body.email = 1)) {
-      alert('test');
-    } else {
-      const user = User.create(req.body);
-      user.then(() => res.redirect('/me/stored/users')).catch(next);
-    }
+    const user = User.create(req.body);
+    user.then(() => res.redirect('/me/stored/users')).catch(next);
   }
 
   // [GET] /users/:user_id/edit
@@ -69,7 +66,7 @@ class UsersController {
     Promise.all([
       User.findOne({ where: { user_id: req.params.user_id } }),
       sequelize.query(
-        ' select *, exists(select * from Like_res where Like_res.res_id = Restaurant.res_id and Like_res.user_id = :user_id) as likedRestaurants from Restaurant',
+        ' select *, exists(select * from Like_res where Like_res.res_id = Restaurant.res_id and Like_res.user_id = :user_id) as likedRestaurants, (select rating from Rate_res where Rate_res.res_id = Restaurant.res_id and Rate_res.user_id = :user_id) as rating from Restaurant',
         {
           replacements: { user_id: req.params.user_id },
           type: QueryTypes.SELECT,
@@ -77,28 +74,54 @@ class UsersController {
       ),
     ])
       .then(([user, detailRestaurant]) => {
-        return res.render('users/show', {
-          user: sequelizeToJSON(user),
-          detailRestaurant,
-        });
+        if(user){
+          return res.render('users/show', {
+            user: sequelizeToJSON(user),
+            detailRestaurant,
+          });
+        } else {
+          res.status(404)
+          throw new Error('User not found')
+        }
       })
       .catch(next);
   }
 
-  // [POST] /users/:user_id/likeRes
+  // [POST] /users/:user_id/likeResAction
   likeResAction(req, res, next) {
     Like_res.findOrCreate({
       where: { user_id: req.params.user_id, res_id: req.body.res_id },
+      defaults: {},
+    })
+      .then((result) => {
+        if (!result[0]._options.isNewRecord) {
+          result[0].destroy();
+        }
+        res.send({ liked: result[0]._options.isNewRecord });
+      })
+      .catch(next);
+  }
+
+  // [PUT] /users/:user_id/rateResAction
+  rateResAction(req, res, next) {
+    Rate_res.findOrCreate({
+      where: { user_id: req.params.user_id, res_id: req.body.res_id },
       defaults: {
-        date_like: new Date(),
+        rating: req.body.rateStar,
       },
-    }).then((result) => {
-      if (result[0]._options.isNewRecord) {
-      } else {
-        result[0].destroy();
-      }
-      res.send({ liked: result[0]._options.isNewRecord });
-    });
+    })
+      .then((result) => {
+        if (!result[0]._options.isNewRecord) {
+          result[0].update({ rating: req.body.rateStar });
+        }
+        res.send({ rating: result[0].rating });
+      })
+      .catch(next);
+  }
+
+  // [POST] /users/:user_id/order
+  order(req, res, next) {
+    res.json('test');
   }
 }
 

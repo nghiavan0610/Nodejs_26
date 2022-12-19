@@ -9,14 +9,12 @@ Restaurant.init(
     res_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      field: 'res_id',
       allowNull: false,
       autoIncrement: true,
     },
     res_name: {
       type: DataTypes.STRING,
       allowNull: false,
-      field: 'res_name',
     },
     image: {
       type: DataTypes.STRING,
@@ -42,10 +40,6 @@ Restaurant.init(
   },
 );
 
-// Like_res.belongsTo(Restaurant, {
-//   foreignKey: 'res_id',
-// });
-
 // Add plugins
 SequelizeSlugify.slugifyModel(Restaurant, {
   source: ['res_name'],
@@ -54,11 +48,6 @@ SequelizeSlugify.slugifyModel(Restaurant, {
   bulkUpdate: true,
 });
 
-// const test = Like_res.findOne({
-//   where: {
-//     'res_id' : 11
-//   },
-//   include: Restaurant
-// })
+
 
 module.exports = Restaurant;

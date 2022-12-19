@@ -1,0 +1,101 @@
+<div class="mt-4">
+    <div class="navigation-container">
+      <a href="/me/stored/restaurants">Danh sách nhà hàng</a>
+      
+
+      <h1>{{resName}}</h1>
+      <h3>Danh sách món ăn</h3>
+      <div class="navigation-right">
+      <button><a href="/restaurants/{{resSlug}}/foods/create">Tạo món</a></button>
+      <button><a href="/restaurants/{{resSlug}}/foods/trash">Thùng rác ({{deletedCount}}) </a></button>
+      </div>
+    </div>
+
+    <table class="table mt-4">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Tên món</th>
+      <th scope="col">Loại</th>
+      <th scope="col">Mô tả</th>
+      <th scope="col">Giá</th>
+      <th scope="col" colspan="2">Thời gian tạo</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each foods}}
+    <tr>
+      <th scope="row">{{sum @index 1}}</th>
+      <td>{{this.food_name}}</td>
+      <td>{{this.Food_type.type_name}}</td>
+      <td>{{this.desc}}</td>
+      <td>{{this.price}}</td>
+      <td>{{this.createdAt}}</td>
+      <td>
+        <a href="/restaurants/{{../resSlug}}/foods/{{this.food_id}}/edit" class="btn btn-link">Sửa</a>
+        <a href="" class="btn btn-link" data-res_slug="{{../resSlug}}" data-id="{{this.food_id}}" data-bs-toggle="modal" data-bs-target="#delete-food-modal">Xóa</a>
+      </td>
+    </tr>
+
+    {{else}}
+    <tr>
+      <td colspan="5" class="text-center">
+        Không có món ăn nào trong nhà hàng.
+        <a href="/restaurants/{{resSlug}}/foods/create">Tạo món ăn</a>
+      </td>
+    </tr>
+
+    {{/each}}
+  </tbody>
+</table>
+</div>
+
+
+
+
+
+{{!-- Confirm delete food --}}
+<div class="modal fade" id="delete-food-modal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5">Xóa món ăn?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc muốn xóa món ăn này chứ?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-food" type="button" class="btn btn-primary btn-danger">Xóa bỏ</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<form name="delete-food-form" method="POST"></form>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    let foodID, resSlug;
+    const deleteForm = document.forms['delete-food-form'];
+    const buttonDeleteFood = document.querySelector('#btn-delete-food');
+    const deleteFoodModal = document.querySelector('#delete-food-modal');
+
+    // When dialog confirm clicked
+    deleteFoodModal.addEventListener('show.bs.modal', (event) => {
+      foodID = event.relatedTarget.getAttribute("data-id");
+      resSlug = event.relatedTarget.getAttribute("data-res_slug");
+    });
+
+    // When delete food btn clicked
+    buttonDeleteFood.addEventListener('click', () => {
+      deleteForm.action = '/restaurants/' +resSlug+  '/foods/' +foodID + '?_method=DELETE';
+      deleteForm.submit();
+    })
+
+  })
+
+</script>

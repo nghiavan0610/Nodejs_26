@@ -1,4 +1,5 @@
 const path = require('path');
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
@@ -7,7 +8,6 @@ const handlebars = require('express-handlebars');
 const methodOverride = require('method-override');
 const route = require('./routes');
 
-const port = 3000;
 
 app.use(methodOverride('_method'));
 
@@ -40,9 +40,14 @@ app.use(express.json());
 // Route init
 route(app);
 
+// Sync models
+// db.sequelize.sync({alter: true});
+
 // Connect to db
 db.connect();
 
-app.listen(port, () => {
-  console.log(`App listening on port ${port}`);
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`App listening on port ${PORT}`);
 });
