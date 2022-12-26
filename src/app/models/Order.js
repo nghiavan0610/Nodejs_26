@@ -24,7 +24,6 @@ Order.init(
     },
     total_price: {
       type: DataTypes.FLOAT,
-      allowNull: false,
     },
     discount: {
       type: DataTypes.FLOAT,

@@ -26,15 +26,16 @@
             data-bs-toggle='dropdown'
             aria-expanded='false'
           >
-            Admin
+            {{reqUser.user_name}}
           </a>
           <ul class='dropdown-menu'>
-            <li><a class='dropdown-item' href='/me/stored/users'>Quản lý người dùng</a></li>
+            <li><a class='dropdown-item' href='/profile'>Hồ sơ của tôi</a></li>
             <div class='dropdown-divider'></div>
-            <li><a class='dropdown-item' href='/me/stored/restaurants'>Quản lý nhà hàng</a></li>
-            {{!-- <li><a class='dropdown-item' href='/me/stored/foods'>Quản lý món ăn</a></li> --}}
+            <li><a class='dropdown-item' href='/manage/stored/users'>Quản lý người dùng</a></li>
             <div class='dropdown-divider'></div>
-            <li><a class='dropdown-item' href='#'>Đăng xuất</a></li>
+            <li><a class='dropdown-item' href='/manage/stored/restaurants'>Quản lý nhà hàng</a></li>
+            <div class='dropdown-divider'></div>
+            <li><a class='dropdown-item' href='/logout'>Đăng xuất</a></li>
 
           </ul>
         </li>

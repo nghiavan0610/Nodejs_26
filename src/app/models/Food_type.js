@@ -26,5 +26,4 @@ Food_type.init(
   },
 );
 
-
 module.exports = Food_type;

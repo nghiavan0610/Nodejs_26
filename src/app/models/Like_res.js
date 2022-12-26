@@ -55,6 +55,4 @@ Like_res.belongsTo(User, {
   foreignKey: 'user_id',
 });
 
-
-
 module.exports = Like_res;

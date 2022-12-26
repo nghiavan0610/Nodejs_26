@@ -1,13 +1,13 @@
 const path = require('path');
 require('dotenv').config();
 const express = require('express');
+const cookieParser = require("cookie-parser");
 const app = express();
 const morgan = require('morgan');
 const db = require('./config/db');
 const handlebars = require('express-handlebars');
 const methodOverride = require('method-override');
 const route = require('./routes');
-
 
 app.use(methodOverride('_method'));
 
@@ -16,6 +16,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // HTTP logger
 app.use(morgan('combined'));
+
+// Cookie
+app.use(cookieParser());
 
 // Template engine
 app.engine(
@@ -42,6 +45,7 @@ route(app);
 
 // Sync models
 // db.sequelize.sync({alter: true});
+
 
 // Connect to db
 db.connect();

@@ -1,7 +1,7 @@
 <div class="mt-4">
     <h3>Sửa nhà hàng</h3>
 
-<form method="POST" action="/restaurants/{{restaurant.res_id}}?_method=PUT">
+<form method="POST" action="/restaurants/{{restaurant.slug}}?_method=PUT">
   <div class="form-group">
     <label for="res_name">Tên nhà hàng</label>
     <input type="text" class="form-control" value="{{restaurant.res_name}}" id="res_name" name="res_name">

@@ -7,7 +7,7 @@ class Order_detail extends Model {}
 
 Order_detail.init(
   {
-    order_detail_id: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
@@ -32,10 +32,6 @@ Order_detail.init(
     },
     quantity: {
       type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    price: {
-      type: DataTypes.FLOAT,
       allowNull: false,
     },
   },
@@ -69,7 +65,5 @@ Food.hasMany(Order_detail, {
 Order_detail.belongsTo(Food, {
   foreignKey: 'food_id',
 });
-
-
 
 module.exports = Order_detail;

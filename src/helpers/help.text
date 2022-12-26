@@ -1,0 +1,27 @@
+{
+    "email": "nghiavan0610@gmail.com",
+    "password": "1234"
+}
+
+
+  likeBtnAll.forEach(likeBtn => {
+    likeBtn.innerHTML = likeBtn.value == 1  ? 'Liked' : 'Like';
+
+    likeBtn.addEventListener('click', async () => {  
+      const res_id = likeBtn.getAttribute('data-res_id');
+      const user_id = likeBtn.getAttribute('data-user_id');
+
+      const result = await fetch('/users/' + url.split('/').pop() + '/likeResAction', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({user_id, res_id}),
+      })
+
+      const {liked} = await result.json();
+
+      likeBtn.innerHTML = liked ? 'Liked' : 'Like';
+    })
+  })

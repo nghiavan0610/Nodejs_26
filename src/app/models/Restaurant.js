@@ -48,6 +48,4 @@ SequelizeSlugify.slugifyModel(Restaurant, {
   bulkUpdate: true,
 });
 
-
-
 module.exports = Restaurant;

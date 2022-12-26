@@ -4,8 +4,11 @@ const { sequelize } = require('../../config/db');
 const SequelizeSlugify = require('sequelize-slugify');
 const bcrypt = require('bcrypt');
 
-
-class User extends Model {}
+class User extends Model {
+  matchPassword(enterPassword) {
+    return bcrypt.compareSync(enterPassword, this.password);
+  }
+}
 
 User.init(
   {
@@ -19,7 +22,6 @@ User.init(
     },
     user_name: {
       type: DataTypes.STRING,
-      unique: true,
       allowNull: false,
       field: 'full_name',
     },
@@ -28,12 +30,22 @@ User.init(
       allowNull: false,
       unique: true,
       validate: {
-        isEmail: true,
-      }
+        isEmail: {
+          msg: 'invalid email',
+        },
+      },
     },
     password: {
       type: DataTypes.STRING,
       allowNull: false,
+      set(value) {
+        const hashedPassword = bcrypt.hashSync(value, 10);
+        this.setDataValue('password', hashedPassword);
+      },
+    },
+    role: {
+      type: DataTypes.ENUM("user", "manager", "admin"),
+      defaultValue: "user",
     },
     slug: {
       type: DataTypes.STRING,
@@ -52,6 +64,11 @@ User.init(
     },
     timestamps: true,
     paranoid: true,
+    hooks: {
+      afterSave: (record) => {
+        delete record.dataValues.password;
+      },
+    },
   },
 );
 
@@ -62,7 +79,5 @@ SequelizeSlugify.slugifyModel(User, {
   column: 'slug',
   bulkUpdate: true,
 });
-
-
 
 module.exports = User;

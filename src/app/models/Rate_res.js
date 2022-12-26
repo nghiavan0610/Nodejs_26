@@ -57,6 +57,4 @@ Rate_res.belongsTo(User, {
   foreignKey: 'user_id',
 });
 
-
-
 module.exports = Rate_res;

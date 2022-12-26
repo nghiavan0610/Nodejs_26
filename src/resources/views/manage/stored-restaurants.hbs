@@ -3,7 +3,7 @@
       <h3>Danh sách nhà hàng</h3>
       <div class="navigation-right">
       <button><a href="/restaurants/create">Tạo nhà hàng</a></button>
-      <button><a href="/me/trash/restaurants">Thùng rác ({{deletedCount}}) </a></button>
+      <button><a href="/manage/trash/restaurants">Thùng rác ({{deletedCount}}) </a></button>
       </div>
     </div>
 
@@ -24,7 +24,7 @@
       <td>{{this.desc}}</td>
       <td>{{this.createdAt}}</td>
       <td>
-        <a href="/restaurants/{{this.res_id}}/edit" class="btn btn-link">Sửa</a>
+        <a href="/restaurants/{{this.slug}}/edit" class="btn btn-link">Sửa</a>
         <a href="" class="btn btn-link" data-id="{{this.res_id}}" data-bs-toggle="modal" data-bs-target="#delete-restaurant-modal">Xóa</a>
       </td>
     </tr>

@@ -3,7 +3,7 @@
       <h3>Danh sách người dùng</h3>
       <div class="navigation-right">
       <button><a href="/users/create">Tạo người dùng</a></button>
-      <button><a href="/me/trash/users">Thùng rác ({{deletedCount}})</a></button>
+      <button><a href="/manage/trash/users">Thùng rác ({{deletedCount}})</a></button>
     </div>
     </div>
 
@@ -21,12 +21,12 @@
     {{#each users}}
     <tr>
       <th scope="row">{{sum @index 1}}</th>
-      <td><a href="/users/{{this.user_id}}">{{this.user_name}}</a></td>
+      <td><a href="/users/{{this.slug}}">{{this.user_name}}</a></td>
       <td>{{this.email}}</td>
       <td>{{this.new}}</td>
       <td>{{this.createdAt}}</td>
       <td>
-        <a href="/users/{{this.user_id}}/edit" class="btn btn-link">Sửa</a>
+        <a href="/users/{{this.slug}}/edit" class="btn btn-link">Sửa</a>
         <a href="" class="btn btn-link" data-id="{{this.user_id}}" data-bs-toggle="modal" data-bs-target="#delete-user-modal">Xóa</a>
       </td>
     </tr>

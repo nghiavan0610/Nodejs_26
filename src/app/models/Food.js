@@ -28,6 +28,11 @@ Food.init(
     },
     image: {
       type: DataTypes.STRING,
+      validate: {
+        isUrl: {
+          msg: 'Invalid image URL',
+        },
+      },
     },
     price: {
       type: DataTypes.FLOAT,
@@ -74,6 +79,5 @@ Food_type.hasMany(Food, {
 Food.belongsTo(Food_type, {
   foreignKey: 'type_id',
 });
-
 
 module.exports = Food;

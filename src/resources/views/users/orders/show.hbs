@@ -12,7 +12,7 @@
             <p>Tổng số rate: {{rst.rating}} <i class="bi bi-star-fill"></i></p>
             {{#each rate}}
             <ul>
-                <li>{{this.User.user_name}} - {{this.rating}}<i class="bi bi-star-fill"></i></li>
+                <li>{{this.User.user_name}} - {{this.amount}}<i class="bi bi-star-fill"></i></li>
             </ul>
             {{/each}}
         </div>
@@ -34,12 +34,16 @@
         <div class="card" style="width: 18rem;">
             <img src="" class="card-img-top mt-3" alt="{{this.food_name}}">
         </a>
+        <form action="">
         <div class="card-body">
-            <p class="card-text">{{this.food_name}}</p>
-            <p class="card-text">{{this.Food_type.type_name}}</p>
-            <p class="card-text">{{this.desc}}</p>
-            <p class="card-text">{{this.price}}</p>
+            <p class="card-text" id="" name="">{{this.food_name}}</p>
+            <p class="card-text" id="" name="">{{this.Food_type.type_name}}</p>
+            <p class="card-text" id="" name="">{{this.desc}}</p>
+            <p class="card-text" id="" name="">{{this.price}}</p>
+            <p type="hidden" value="{{this.food_id}}"></p>
+            <button>Thêm món</button>
         </div>
+        </form>
         </div>
         </div>
         {{/each}}
