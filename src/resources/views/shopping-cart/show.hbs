@@ -1,0 +1,240 @@
+<section class="h-100" style="background-color: #eee;">
+  <div class="container h-100 py-5">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-10">
+        <a href="/">Quay lại gọi món</a>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="fw-normal mb-0 text-black">Giỏ hàng</h3>
+          
+        </div>
+
+          {{#each orderDetails}}
+
+        <div class="card rounded-3 mb-4 orderDetail" data-id="{{this.id}}" data-food_id="{{this.food_id}}">
+          <div class="card-body p-4">
+            <div class="row d-flex justify-content-between align-items-center">
+              <div class="col-md-2 col-lg-2 col-xl-2">
+                <img
+                  src="{{this.Food.image}}"
+                  class="img-fluid rounded-3" alt="Cotton T-shirt">
+              </div>
+              <div class="col-md-5 col-lg-5 col-xl-4">
+                <p id="" name="" class="lead fw-normal mb-2">{{this.Food.food_name}}</p>
+                <p id="" name="" class="text-muted">{{this.Food.Food_type.type_name}}</p>
+                <p id="" name="" class="text-muted">{{this.Food.desc}}</p>
+                <p name="unit-price" value="{{this.Food.price}}" class="text-muted unit-price">{{this.Food.price}} vnd</p>
+              </div>
+              <div class="col-md-2 col-lg-2 col-xl-2 d-flex quantityDiv">
+                <button class="btn btn-link px-2 btn-minus" 
+                  onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                </button>
+
+                <input id="form1" min="0" name="quantity" value="{{this.quantity}}" type="number"
+                  class="form-control form-control-sm quantity"> </input>
+
+                <button class="btn btn-link px-2 btn-plus"
+                  onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                </button>
+              </div>
+              <h4 name="amount" class="col-md-3 col-lg-2 csol-xl-2 offset-lg-1 amount">{{multiply this.Food.price this.quantity}}</h4>
+              <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                <a href="" class="text-danger btn-delete" data-id="{{this.id}}"><i class="bi bi-trash3"></i></a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          {{else}}
+            <div class="card rounded-3 mb-4 orderDetail" data-food_id="{{this.food_id}}">
+              <div class="card-body p-4">
+                <p>Bạn chưa thêm bất kì món nào vào giỏ hàng</p>
+                <a href="/">Quay lại gọi món</a>
+              </div>
+            </div> 
+
+          {{/each}}
+
+
+        <div class="card mb-4">
+          <div class="card-body p-4 d-flex flex-row">
+            <div class="form-outline flex-fill">
+              <input type="text" id="form1" name="discount" class="form-control form-control-lg discount" />
+              <label class="form-label" for="discount">Giảm giá</label>
+            </div>
+            <button type="button" class="btn btn-outline-warning btn-lg ms-3 btn-discount">Áp dụng</button>
+          </div>
+        </div>
+
+        <div class="card p-4 d-flex flex-col">
+          <div class="d-flex flex-row">
+            <p>Tổng tiền hàng: </p>
+            <p class="flex-fill text-end">đ</p><p name="total-amount" value="" class="total-amount"></p>
+          </div>
+
+          <div class="d-flex flex-row">
+            <p>Giảm giá: </p>
+            <p class="flex-fill text-end">-đ</p><p name="discount-amount" value="" class="discount-amount">0</p>
+          </div>
+
+          <div class="d-flex flex-row">
+            <h5>Thành tiền: </h5>
+            <h5 class="flex-fill text-end">đ</h5><h5 name="total-price" value="" class="total-price"></h5>
+          </div>
+        </div>
+             <div class="p-4 row">
+              <button type="button" class="btn btn-warning btn-block btn-lg" data-bs-toggle='modal' data-bs-target='#pay-modal'>Đặt hàng</button>
+             </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{{!-- Pay confirm modal --}}
+<div
+  class='modal fade'
+  id='pay-modal'
+  tabindex='-1'
+  aria-hidden='true'
+>
+  <div class='modal-dialog'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h1 class='modal-title fs-5'>Xác nhận đặt hàng</h1>
+        <button
+          type='button'
+          class='btn-close'
+          data-bs-dismiss='modal'
+          aria-label='Close'
+        ></button>
+      </div>
+      <div class='modal-body d-flex flex-row'>
+        <p>Đồng ý thanh toán: </p>
+        <p name="total-price-modal" value="" class="total-price-modal"></p><p>đ ?</p>
+      </div>
+      <div class='modal-footer'>
+        <button
+          id='btn-pay'
+          type='button'
+          class='btn btn-primary btn-danger btn-pay'
+        >Đồng ý</button>
+        <button
+          type='button'
+          class='btn btn-secondary'
+          data-bs-dismiss='modal'
+        >Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const orderDetailAll = Array.from(document.querySelectorAll('.orderDetail'));
+  const quantityDivAll = Array.from(document.querySelectorAll('.quantityDiv'));
+  const amountAll = Array.from(document.querySelectorAll('.amount'));
+
+  const totalAmount = document.querySelector('.total-amount');
+
+  const discount = document.querySelector('.discount');
+  const discountAmount = document.querySelector('.discount-amount');
+  const totalPrice = document.querySelector('.total-price');
+
+
+  orderDetailAll.forEach(orderDetail => {
+    const amount = orderDetail.querySelector('.amount');
+    const unitPirce = orderDetail.querySelector('.unit-price');
+    const quantityDiv = orderDetail.querySelector('.quantityDiv');
+    let order_detail_id = orderDetail.getAttribute('data-id');
+
+    // Handle total amount calculation at the first display
+    const priceSum = amountAll.reduce((acc, item) => {
+      return acc + parseInt(item.innerText)
+    },0);
+
+    totalAmount.innerHTML = priceSum;
+    totalPrice.innerHTML = totalAmount.innerHTML;
+
+    // Handle quntity change
+    quantityDiv.addEventListener('change', async () => {
+      const quantity = orderDetail.querySelector('.quantity').value;
+      
+      amount.innerHTML = unitPirce.attributes.value.nodeValue * quantity;
+
+      const priceSum = amountAll.reduce((acc, item) => {
+        return acc + parseInt(item.innerText)
+      },0);
+
+      totalAmount.innerHTML = priceSum;
+
+      discountAmount.innerHTML = totalAmount.innerHTML * discount.value/100;
+      totalPrice.innerHTML = totalAmount.innerHTML - discountAmount.innerHTML;
+
+      const result = await fetch('/cart/quantity-update', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({order_detail_id, quantity}),
+      });
+    });
+
+    // Handle delete button
+    const deleteBtn = orderDetail.querySelector('.btn-delete');
+    deleteBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      fetch('/cart/' +order_detail_id, {
+        method: 'DELETE',
+      })
+      .then(() => window.location.replace('/cart'));
+    });
+
+  });
+
+    // Handle delete button
+
+
+
+  // Handle apply discount
+  const discountBtn = document.querySelector('.btn-discount');
+
+  discountBtn.addEventListener('click', async () => {
+    discountAmount.innerHTML = totalAmount.innerHTML * discount.value/100;
+    totalPrice.innerHTML = totalAmount.innerHTML - discountAmount.innerHTML;
+  })
+
+
+
+  // Handle confirm to pay
+  const payBtn = document.querySelector('#btn-pay');
+  const payModal = document.querySelector('#pay-modal');
+  let totalPriceModal = document.querySelector('.total-price-modal');
+
+  payModal.addEventListener('show.bs.modal', (event) => {
+      totalPriceModal.innerHTML = totalPrice.innerHTML; 
+    }); 
+
+  payBtn.addEventListener("click", async () => {
+    const formData = {
+      discount: discount.value === '' ? 0 : discount.value,
+      total_price: totalPrice.innerHTML
+    };
+
+    const result = await fetch('/cart/pay', {
+      method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formData),
+    })
+
+     await window.location.replace('/cart/thank-you-for-your-order');
+
+   
+  })
+
+  
+})
+
+</script>

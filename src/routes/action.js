@@ -5,9 +5,7 @@ const requiredRoles = require('../middlewares/RoleMiddelware');
 
 const actionController = require('../app/controllers/ActionController');
 
-router.post('/likeResAction', actionController.likeResAction);
-router.put('/rateResAction', actionController.rateResAction);
-
-
+router.post('/likeResAction', protect, actionController.likeResAction);
+router.put('/rateResAction', protect, actionController.rateResAction);
 
 module.exports = router;

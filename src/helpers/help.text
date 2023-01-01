@@ -1,27 +1,31 @@
 {
-    "email": "nghiavan0610@gmail.com",
-    "password": "1234"
+    "email": "admin@example.com",
+    "password": "admin"
 }
 
 
-  likeBtnAll.forEach(likeBtn => {
-    likeBtn.innerHTML = likeBtn.value == 1  ? 'Liked' : 'Like';
 
-    likeBtn.addEventListener('click', async () => {  
-      const res_id = likeBtn.getAttribute('data-res_id');
-      const user_id = likeBtn.getAttribute('data-user_id');
 
-      const result = await fetch('/users/' + url.split('/').pop() + '/likeResAction', {
-        method: 'POST',
+    const deleteBtn = orderDetail.querySelector('.btn-delete');
+    deleteBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const result = await fetch('/cart/' +order_detail_id, {
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify({user_id, res_id}),
       })
+    });
 
-      const {liked} = await result.json();
 
-      likeBtn.innerHTML = liked ? 'Liked' : 'Like';
+  let order_detail_id;
+  const deleteBtnAll = document.querySelectorAll('.btn-delete');
+  deleteBtnAll.forEach(deleteBtn => {
+    deleteBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      order_detail_id = deleteBtn.getAttribute('data-id');
+      deleteForm.action = '/cart/' + order_detail_id + '?_method=DELETE';
+      deleteForm.submit();
     })
-  })
+  });

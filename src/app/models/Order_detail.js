@@ -2,6 +2,7 @@ const { DataTypes, Model } = require('sequelize');
 const { sequelize } = require('../../config/db');
 const Order = require('./Order');
 const Food = require('./Food');
+const User = require('./User');
 
 class Order_detail extends Model {}
 
@@ -16,11 +17,14 @@ Order_detail.init(
     },
     order_id: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
         model: Order,
         key: 'order_id',
       },
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     food_id: {
       type: DataTypes.INTEGER,
@@ -33,6 +37,7 @@ Order_detail.init(
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue: 1,
     },
   },
   {

@@ -1,6 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
 const { sequelize } = require('../../config/db');
 const User = require('./User');
+const Restaurant = require('./Restaurant');
 
 class Order extends Model {}
 
@@ -9,7 +10,6 @@ Order.init(
     order_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
-      field: 'order_id',
       allowNull: false,
       autoIncrement: true,
       unique: true,
@@ -23,13 +23,12 @@ Order.init(
       },
     },
     total_price: {
-      type: DataTypes.FLOAT,
+      type: DataTypes.INTEGER,
     },
     discount: {
       type: DataTypes.FLOAT,
-    },
-    status: {
-      type: DataTypes.STRING,
+      defaultValue: 0,
+      allowNull: true,
     },
   },
   {

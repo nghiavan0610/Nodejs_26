@@ -97,6 +97,7 @@
         e.preventDefault();
 
         foodID = restoreBtn.getAttribute("data-id");
+        resSlug = restoreBtn.getAttribute("data-res_slug");
         restoreForm.action = '/restaurants/' +resSlug+ '/foods/' + foodID + '/restore?_method=PATCH';
         restoreForm.submit();
       })

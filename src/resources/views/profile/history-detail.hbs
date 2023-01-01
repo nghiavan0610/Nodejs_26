@@ -1,0 +1,30 @@
+<div class='mt-4'>
+  <div>
+    <a href='/profile/history'>Quay lại</a>
+    <h3>Hóa đơn: {{order_id}}</h3>
+  </div>
+
+  <table class='table mt-4'>
+    <thead>
+      <tr>
+        <th scope='col'>#</th>
+        <th scope='col'>Tên món</th>
+        <th scope='col'>Số lượng</th>
+        <th scope='col'>Đơn giá</th>
+        <th scope='col'>Nhà hàng</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each order_details}}
+        <tr>
+          <th scope='row'>{{sum @index 1}}</th>
+          <td>{{this.Food.food_name}}</td>
+          <td>{{this.quantity}}</td>
+          <td>{{this.Food.price}}</td>
+          <td>{{this.Food.Restaurant.res_name}}</td>
+        </tr>
+
+      {{/each}}
+    </tbody>
+  </table>
+</div>

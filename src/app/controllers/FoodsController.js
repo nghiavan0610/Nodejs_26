@@ -24,16 +24,27 @@ class FoodsController {
         where: { slug: req.params.res_slug },
       }),
       Food.count({
+        include: {
+          model: Restaurant,
+          attributes: ['slug'],
+          where: { slug: req.params.res_slug },
+        },
         where: { deletedAt: { [Op.not]: null } },
         paranoid: false,
       }),
     ])
       .then(([restaurant, deletedCount]) => {
-        res.status(200).render('restaurants/foods/stored-foods', {
+        if (!restaurant) {
+          res.status(404);
+          throw new Error('Restaurant not found');
+        }
+
+        res.status(200).render('foods/stored-foods', {
           deletedCount,
           foods: multipleSequelizeToJSON(restaurant.Food),
           resName: restaurant.res_name,
           resSlug: restaurant.slug,
+          reqUser: req.user,
         });
       })
       .catch(next);
@@ -54,10 +65,15 @@ class FoodsController {
       attributes: ['res_name', 'slug'],
       where: { slug: req.params.res_slug },
     }).then((restaurant) => {
-      res.status(200).render('restaurants/foods/trash-foods', {
+      if (!restaurant) {
+        res.status(404);
+        throw new Error('Restaurant not found');
+      }
+      res.status(200).render('foods/trash-foods', {
         foods: multipleSequelizeToJSON(restaurant.Food),
         resName: restaurant.res_name,
         resSlug: restaurant.slug,
+        reqUser: req.user,
       });
     });
   }
@@ -72,9 +88,14 @@ class FoodsController {
       }),
     ])
       .then(([food_types, restaurant]) => {
-        res.status(200).render('restaurants/foods/create', {
+        if (!restaurant) {
+          res.status(404);
+          throw new Error('Restaurant not found');
+        }
+        res.status(200).render('foods/create', {
           food_types: multipleSequelizeToJSON(food_types),
           restaurant: sequelizeToJSON(restaurant),
+          reqUser: req.user,
         });
       })
       .catch(next);
@@ -82,12 +103,21 @@ class FoodsController {
 
   // [POST] /restaurants/:res_slug/foods/store
   store(req, res, next) {
-    Food.create(req.body)
-      .then(() =>
-        res
-          .status(200)
-          .redirect('/restaurants/' + req.params.res_slug + '/foods'),
-      )
+    Restaurant.findOne({ where: { slug: req.params.res_slug } })
+      .then((restaurant) => {
+        if (!restaurant) {
+          res.status(404);
+          throw new Error('Restaurant not found');
+        }
+
+        Food.create(req.body)
+          .then(() =>
+            res
+              .status(200)
+              .redirect('/restaurants/' + req.params.res_slug + '/foods'),
+          )
+          .catch(next);
+      })
       .catch(next);
   }
 
@@ -109,11 +139,21 @@ class FoodsController {
       Food_type.findAll(),
     ])
       .then(([restaurant, food_types]) => {
-        res.status(200).render('restaurants/foods/edit', {
+        if (!restaurant) {
+          res.status(404);
+          throw new Error('Restaurant not found');
+        }
+
+        if (!restaurant.Food[0]) {
+          res.status(404);
+          throw new Error('Food not found');
+        }
+        res.status(200).render('foods/edit', {
           food_types: multipleSequelizeToJSON(food_types),
           food: sequelizeToJSON(restaurant.Food[0]),
           resName: restaurant.res_name,
           resSlug: restaurant.slug,
+          reqUser: req.user,
         });
       })
       .catch(next);
@@ -121,38 +161,130 @@ class FoodsController {
 
   // [PUT] /restaurants/:res_slug/foods/:food_id
   update(req, res, next) {
-    Food.update(req.body, { where: { food_id: req.params.food_id } })
-      .then(() => {
-        res
-          .status(200)
-          .redirect('/restaurants/' + req.params.res_slug + '/foods');
+    Restaurant.findOne({
+      include: {
+        model: Food,
+        where: { food_id: req.params.food_id },
+        required: false,
+      },
+      attributes: ['res_name', 'slug'],
+      where: { slug: req.params.res_slug },
+    })
+      .then((restaurant) => {
+        if (!restaurant) {
+          res.status(404);
+          throw new Error('Restaurant not found');
+        }
+
+        if (!restaurant.Food[0]) {
+          res.status(404);
+          throw new Error('Food not found');
+        }
+
+        restaurant.Food[0]
+          .update(req.body)
+          .then(() => {
+            res
+              .status(200)
+              .redirect('/restaurants/' + req.params.res_slug + '/foods');
+          })
+          .catch(next);
       })
       .catch(next);
   }
 
   // [DELETE] /restaurants/:res_slug/foods/:food_id
   destroy(req, res, next) {
-    Food.destroy({ where: { food_id: req.params.food_id } })
-      .then(() => {
-        res.status(200).redirect('back');
+    Restaurant.findOne({
+      include: {
+        model: Food,
+        where: { food_id: req.params.food_id },
+        required: false,
+      },
+      attributes: ['res_name', 'slug'],
+      where: { slug: req.params.res_slug },
+    })
+      .then((restaurant) => {
+        if (!restaurant) {
+          res.status(404);
+          throw new Error('Restaurant not found');
+        }
+
+        if (!restaurant.Food[0]) {
+          res.status(404);
+          throw new Error('Food not found');
+        }
+
+        restaurant.Food[0]
+          .destroy()
+          .then(() => {
+            res.status(200).redirect('back');
+          })
+          .catch(next);
       })
       .catch(next);
   }
 
   // [DELETE] /restaurants/:res_slug/foods/:food_id/force
   forceDestroy(req, res, next) {
-    Food.destroy({ where: { food_id: req.params.food_id }, force: true })
-      .then(() => {
-        res.status(200).redirect('back');
+    Restaurant.findOne({
+      include: {
+        model: Food,
+        where: { food_id: req.params.food_id },
+        paranoid: false,
+        required: false,
+      },
+      attributes: ['res_name', 'slug'],
+      where: { slug: req.params.res_slug },
+    })
+      .then((restaurant) => {
+        if (!restaurant) {
+          res.status(404);
+          throw new Error('Restaurant not found');
+        }
+
+        if (!restaurant.Food[0]) {
+          res.status(404);
+          throw new Error('Food not found');
+        }
+        restaurant.Food[0]
+          .destroy({ force: true })
+          .then(() => {
+            res.status(200).redirect('back');
+          })
+          .catch(next);
       })
       .catch(next);
   }
 
   // [PATCH] /restaurants/:res_slug/foods/:food_id/restore
   restore(req, res, next) {
-    Food.restore({ where: { food_id: req.params.food_id } })
-      .then(() => {
-        res.status(200).redirect('back');
+    Restaurant.findOne({
+      include: {
+        model: Food,
+        where: { food_id: req.params.food_id },
+        paranoid: false,
+        required: false,
+      },
+      attributes: ['res_name', 'slug'],
+      where: { slug: req.params.res_slug },
+    })
+      .then((restaurant) => {
+        if (!restaurant) {
+          res.status(404);
+          throw new Error('Restaurant not found');
+        }
+
+        if (!restaurant.Food[0]) {
+          res.status(404);
+          throw new Error('Food not found');
+        }
+        restaurant.Food[0]
+          .restore()
+          .then(() => {
+            res.status(200).redirect('back');
+          })
+          .catch(next);
       })
       .catch(next);
   }

@@ -1,4 +1,8 @@
 const User = require('../models/User');
+const Restaurant = require('../models/Restaurant');
+const Food = require('../models/Food');
+const Order = require('../models/Order');
+const Order_detail = require('../models/Order_detail');
 const { QueryTypes, Op, where } = require('sequelize');
 const { sequelize } = require('../../config/db');
 
@@ -30,7 +34,7 @@ class ProfileController {
             res.status(200).render('profile/show', {
               user: sequelizeToJSON(user),
               detailRestaurant,
-              reqUser: sequelizeToJSON(req.user)
+              reqUser: req.user,
             });
           })
           .catch(next);
@@ -38,13 +42,12 @@ class ProfileController {
       .catch(next);
   }
 
-
-
   // [GET] /profile/edit
   edit(req, res, next) {
-    User.findOne({ 
+    User.findOne({
       attributes: { include: ['password'] },
-      where: { user_id: req.user.user_id } })
+      where: { user_id: req.user.user_id },
+    })
       .then((user) => {
         if (!user) {
           res.status(404);
@@ -52,10 +55,60 @@ class ProfileController {
         }
         res.status(200).render('profile/edit', {
           user: sequelizeToJSON(user),
-          reqUser: sequelizeToJSON(req.user)
+          reqUser: req.user,
         });
       })
       .catch(next);
+  }
+
+  // [GET] /profile/history
+  history(req, res, next) {
+    Order.findAll({ 
+      attributes: [
+        'order_id', 
+        'discount', 
+        'total_price',
+        [sequelize.literal('(total_price * 100) / (100-discount)'), 'amount'],
+        'createdAt',
+      ],
+      where: { user_id: req.user.user_id }
+    })
+    .then(orders => {
+      res.status(200).render('profile/history', {
+        orders: multipleSequelizeToJSON(orders),
+        reqUser: req.user,
+      })
+    })
+    .catch(next);
+  }
+
+  // [GET] /profile/history/:order_id
+  historyDetail(req, res, next) {
+    Order_detail.findAll({
+      attributes: ['quantity'],
+      include: {
+        model: Food,
+        attributes: ['food_name', 'price'],
+        include: {
+          model: Restaurant,
+          attributes: ['res_name'],
+        }
+      },
+      where: { order_id: req.params.order_id },
+    })
+    .then(order_details => {
+      if(!order_details[0]) {
+        res.status(404);
+        throw new Error('Order failed');
+      }
+
+      res.status(200).render('profile/history-detail', {
+        order_details: multipleSequelizeToJSON(order_details),
+        reqUser: req.user,
+        order_id: req.params.order_id,
+      })
+    })
+    .catch(next);
   }
 
   // [PUT] /profile/update
@@ -97,7 +150,6 @@ class ProfileController {
       })
       .catch(next);
   }
-
 }
 
 module.exports = new ProfileController();

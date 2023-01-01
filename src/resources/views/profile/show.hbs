@@ -1,8 +1,15 @@
 
 <div class="mt-4">
   <h1>Hồ sơ của tôi</h1>
+
+  <div class="card p-4 d-flex flex-col">
     <h3>{{user.user_name}}</h3>
-    <a href="/profile/edit">Chỉnh sửa thông tin</a>
+    <div class="d-flex flex-row">
+      <a href="/profile/edit">Chỉnh sửa thông tin</a>
+      <a href="/profile/history" class="flex-fill text-end">Lịch sử mua hàng</a>
+    </div>
+  </div>
+
 
 <div class="mt-4">
     <div class="row">

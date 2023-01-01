@@ -44,8 +44,8 @@ User.init(
       },
     },
     role: {
-      type: DataTypes.ENUM("user", "manager", "admin"),
-      defaultValue: "user",
+      type: DataTypes.ENUM('user', 'manager', 'admin'),
+      defaultValue: 'user',
     },
     slug: {
       type: DataTypes.STRING,

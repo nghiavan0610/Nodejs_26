@@ -1,7 +1,7 @@
 const path = require('path');
 require('dotenv').config();
 const express = require('express');
-const cookieParser = require("cookie-parser");
+const cookieParser = require('cookie-parser');
 const app = express();
 const morgan = require('morgan');
 const db = require('./config/db');
@@ -27,6 +27,7 @@ app.engine(
     extname: '.hbs',
     helpers: {
       sum: (a, b) => a + b,
+      multiply: (a, b) => a * b,
     },
   }),
 );
@@ -44,8 +45,8 @@ app.use(express.json());
 route(app);
 
 // Sync models
-// db.sequelize.sync({alter: true});
-
+// db.sequelize.drop();
+// db.sequelize.sync({force: true});
 
 // Connect to db
 db.connect();

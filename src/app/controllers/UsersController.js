@@ -30,14 +30,13 @@ class UsersController {
             res.status(200).render('users/show', {
               user: sequelizeToJSON(user),
               detailRestaurant,
-              reqUser: sequelizeToJSON(req.user)
+              reqUser: req.user,
             });
           })
           .catch(next);
       })
       .catch(next);
   }
-
 
   // [POST] /users/create
   create(req, res, next) {
@@ -57,7 +56,10 @@ class UsersController {
 
   // [GET] /users/:user_slug/edit
   edit(req, res, next) {
-    User.findOne({ where: { slug: req.params.user_slug } })
+    User.findOne({
+      attributes: { include: ['password'] },
+      where: { slug: req.params.user_slug },
+    })
       .then((user) => {
         if (!user) {
           res.status(404);
@@ -65,7 +67,7 @@ class UsersController {
         }
         res.status(200).render('users/edit', {
           user: sequelizeToJSON(user),
-          reqUser: sequelizeToJSON(req.user)
+          reqUser: req.user,
         });
       })
       .catch(next);
@@ -160,7 +162,10 @@ class UsersController {
 
   // [PATCH] /users/:user_id/restore
   restore(req, res, next) {
-    User.findOne({ where: { user_id: req.params.user_id }, paranoid: false })
+    User.findOne({
+      where: { user_id: req.params.user_id },
+      paranoid: false,
+    })
       .then((user) => {
         if (!user) {
           res.status(404);
@@ -173,13 +178,6 @@ class UsersController {
           .catch(next);
       })
       .catch(next);
-  }
-
-
-
-  // [POST] /users/:user_id/order
-  order(req, res, next) {
-    res.json('test');
   }
 }
 

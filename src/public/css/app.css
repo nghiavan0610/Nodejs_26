@@ -53,7 +53,7 @@ div[class^='rate-'] > label:hover ~ input:checked ~ label {
 /* Modified from: https://github.com/mukulkant/Star-rating-using-pure-css */
 .divider:after,
 .divider:before {
-  content: "";
+  content: '';
   flex: 1;
   height: 1px;
   background: #eee; }

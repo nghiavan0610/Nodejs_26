@@ -43,11 +43,8 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   const likeBtnAll = document.querySelectorAll('.btn-like');
-  const url = window.location.href;
 
   const rateBtnAll = document.querySelectorAll('input[name^="rate-"]');
-
-  const orderBtnAll = document.querySelectorAll('.btn-order');
   
   // Handle Like action
   likeBtnAll.forEach(likeBtn => {
@@ -89,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: JSON.stringify({user_id, res_id, rateStar}),
       })
-
+      
       const {rating} = await result.json();
       
       rateBtn.checked = rateBtn.value == rating;

@@ -1,24 +1,39 @@
-<div class="mt-4">
-    <h3>Sửa nhà hàng</h3>
+<div class='mt-4'>
+  <h3>Sửa nhà hàng</h3>
 
-<form method="POST" action="/restaurants/{{restaurant.slug}}?_method=PUT">
-  <div class="form-group">
-    <label for="res_name">Tên nhà hàng</label>
-    <input type="text" class="form-control" value="{{restaurant.res_name}}" id="res_name" name="res_name">
-  </div>
+  <form method='POST' action='/restaurants/{{restaurant.slug}}?_method=PUT'>
+    <div class='form-group'>
+      <label for='res_name'>Tên nhà hàng</label>
+      <input
+        type='text'
+        class='form-control'
+        value='{{restaurant.res_name}}'
+        id='res_name'
+        name='res_name'
+      />
+    </div>
 
-  <div class="form-group">
-    <label for="desc">Mô tả</label>
-    <textarea class="form-control" id="desc" name="desc">{{restaurant.desc}}</textarea>
-  </div>
+    <div class='form-group'>
+      <label for='desc'>Mô tả</label>
+      <textarea
+        class='form-control'
+        id='desc'
+        name='desc'
+      >{{restaurant.desc}}</textarea>
+    </div>
 
-  <div class="form-group">
-    <label for="videoID">VideoID</label>
-    <input type="text" class="form-control" value="{{restaurant.videoID}}" id="videoID" name="videoID">
-  </div>
+    <div class='form-group'>
+      <label for='videoID'>VideoID</label>
+      <input
+        type='text'
+        class='form-control'
+        value='{{restaurant.videoID}}'
+        id='videoID'
+        name='videoID'
+      />
+    </div>
 
-
-  <button type="submit" class="btn btn-primary mt-4">Lưu lại</button>
-</form>
+    <button type='submit' class='btn btn-primary mt-4'>Lưu lại</button>
+  </form>
 
 </div>

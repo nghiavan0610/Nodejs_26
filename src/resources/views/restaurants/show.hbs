@@ -35,10 +35,11 @@
             <img src="" class="card-img-top mt-3" alt="{{this.food_name}}">
         </a>
         <div class="card-body">
-            <p class="card-text">{{this.food_name}}</p>
-            <p class="card-text">{{this.Food_type.type_name}}</p>
-            <p class="card-text">{{this.desc}}</p>
-            <p class="card-text">{{this.price}}</p>
+            <h3 class="card-text">{{this.food_name}}</h3>
+            <p class="card-text">Loại: {{this.Food_type.type_name}}</p>
+            <p class="card-text">Mô tả: {{this.desc}}</p>
+            <p class="card-text">Giá: {{this.price}}</p>
+            <button type="button" data-food_id="{{this.food_id}}" class="btn-order">Thêm món</button>
         </div>
         </div>
         </div>
@@ -46,3 +47,26 @@
 
     </div>
 </div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+    const orderBtnAll = document.querySelectorAll('.btn-order');
+
+    orderBtnAll.forEach(orderBtn => {
+        orderBtn.addEventListener('click', async () => {
+            const food_id = orderBtn.getAttribute('data-food_id');
+
+            const result = await fetch('/cart/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                    },
+                body: JSON.stringify({food_id}),
+            })
+        })
+    })
+})
+
+</script>

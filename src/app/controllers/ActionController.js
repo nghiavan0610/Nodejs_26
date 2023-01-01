@@ -11,7 +11,6 @@ const {
 } = require('../../ulti/sequelize');
 
 class ActionController {
-
   // [POST] /action/likeResAction
   likeResAction(req, res, next) {
     Like_res.findOrCreate({
@@ -61,7 +60,6 @@ class ActionController {
       })
       .catch(next);
   }
-
 }
 
 module.exports = new ActionController();
