@@ -2,25 +2,64 @@
 <div class="mt-4">
   <h1>Hồ sơ của tôi</h1>
 
-  <div class="card p-4 d-flex flex-col">
-    <h3>{{user.user_name}}</h3>
-    <div class="d-flex flex-row">
-      <a href="/profile/edit">Chỉnh sửa thông tin</a>
-      <a href="/profile/history" class="flex-fill text-end">Lịch sử mua hàng</a>
+<section class="vh-50" style="background-color: #9de2ff;">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-md-9 col-lg-7 col-xl-6">
+        <div class="card" style="border-radius: 15px;">
+          <div class="card-body p-4">
+            <div class="d-flex text-black">
+              <div class="flex-shrink-0">
+                <a href="data:image/jpeg;base64,{{user.avatar}}">
+                <img src="data:image/jpeg;base64,{{user.avatar}}"
+                  alt="{{user.full_name}}" class="img-fluid"
+                  style="width: 180px; border-radius: 10px;"></a>
+              </div>
+              <div class="flex-grow-1 ms-3">
+                <h5 class="mb-1">{{user.user_name}}</h5>
+                <p class="mb-2" style="color: #2b2a2a;">Role: {{user.role}}</p>
+                <p class="mb-3 pb-1" style="color: #2b2a2a;">Email: {{user.email}}</p>
+                <div class="d-flex justify-content-between rounded-3 p-2 mb-2"
+                  style="background-color: #efefef;">
+                  <div>
+                    <p class="small text-muted mb-1">Ordered</p>
+                    <p class="mb-0">{{user.totalOrder}}</p>
+                  </div>
+                  <div class="px-3">
+                    <p class="small text-muted mb-1">Liked</p>
+                    <p class="mb-0">{{user.totalLiked}}</p>
+                  </div>
+                  <div>
+                    <p class="small text-muted mb-1">Rated</p>
+                    <p class="mb-0">{{user.totalRate}}</p>
+                  </div>
+                  
+                </div>
+                <div class="d-flex pt-1">
+                  <button type="button" class="btn btn-outline-primary me-1 flex-grow-1" onclick="location.href='/profile/edit'">Chỉnh sửa thông tin</button>
+                  <button type="button" class="btn btn-primary flex-grow-1" onclick="location.href='/profile/history'">Lịch sử mua hàng</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
+</section>
 
 
 <div class="mt-4">
     <div class="row">
+      <h3>Các nhà hàng đã được like và đánh giá</h3>
         {{#each detailRestaurant}}
-        <div class="col-sm-6 col-lg-4">
+        <div class="col-sm-6 col-lg-4 mt-4">
         <div class="card" style="width: 18rem;">
-        <a href="/users/{{../user.slug}}/{{this.slug}}/order">
-            <img src="{{this.image}}" class="card-img-top mt-3" alt="{{this.res_name}}">
+        <a href="/restaurants/{{this.slug}}">
+            <img src="data:image/jpeg;base64,{{this.image}}" class="card-img-top mt-3" alt="{{this.res_name}}">
         </a>
         <div class="card-body">
-            <a href="/users/{{../user.slug}}/{{this.slug}}/order">{{this.res_name}}</a>
+            <a href="/restaurants/{{this.slug}}">{{this.res_name}}</a>
             <p class="card-text">{{this.desc}}</p>
            
             <button type="button" data-user_id="{{../user.user_id}}" data-res_id="{{this.res_id}}" value="{{this.likedRestaurants}}" class="btn-like">Like</button>

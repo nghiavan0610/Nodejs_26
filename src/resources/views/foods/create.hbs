@@ -2,7 +2,7 @@
   <h1>{{restaurant.res_name}}</h1>
   <h3>Tạo món ăn mới</h3>
 
-  <form method='POST' action='/restaurants/{{restaurant.slug}}/foods/store'>
+  <form method='POST' enctype="multipart/form-data" action='/restaurants/{{restaurant.slug}}/foods/store'>
 
     <select class='form-group' id='type_id' name='type_id'>
       <option>Loại món</option>
@@ -16,9 +16,10 @@
       <input type='text' class='form-control' id='food_name' name='food_name' />
     </div>
 
-    <div class='form-group'>
+    <div class="form-group">
       <label for='image'>Hình ảnh</label>
-      <input type='text' class='form-control' id='image' name='image' />
+      <br>
+      <input type="file" class="form-control-file" id='image' name="image">
     </div>
 
     <div class='form-group'>
@@ -31,8 +32,7 @@
       <textarea class='form-control' id='desc' name='desc'></textarea>
     </div>
 
-    <div class='form-group'>
-      <label for='res_id'></label>
+    
       <input
         type='hidden'
         value='{{restaurant.res_id}}'
@@ -40,7 +40,7 @@
         id='res_id'
         name='res_id'
       />
-    </div>
+   
 
     <button type='submit' class='btn btn-primary mt-4'>Thêm món</button>
   </form>

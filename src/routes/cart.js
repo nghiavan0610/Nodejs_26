@@ -10,7 +10,9 @@ router.post('/order', protect, cartController.order);
 
 router.put('/quantity-update', protect, cartController.quantityUpdate);
 router.delete('/:order_detail_id', protect, cartController.destroy);
-router.get('/thank-you-for-your-order', protect, (req,res) => {res.render('shopping-cart/thank')});
+router.get('/thank-you-for-your-order', protect, (req, res) => {
+  res.render('shopping-cart/thank');
+});
 
 router.post('/pay', protect, cartController.pay);
 

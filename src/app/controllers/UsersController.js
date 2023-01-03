@@ -90,7 +90,7 @@ class UsersController {
         if (checkUser) {
           user
             .update(req.body)
-            .then(() => res.status(304).redirect('/manage/stored/users'))
+            .then(() => res.status(200).redirect('/manage/stored/users'))
             .catch(next);
         }
 
@@ -98,7 +98,7 @@ class UsersController {
           User.findOne({ where: { email: req.body.email } })
             .then((existedEmail) => {
               if (existedEmail) {
-                res.status(404);
+                res.status(409);
                 throw new Error('Email already in use');
               }
 

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const protect = require('../middlewares/AuthMiddleware');
 const requiredRoles = require('../middlewares/RoleMiddelware');
+const upload = require('../middlewares/UploadMiddleware');
 
 const restaurantsController = require('../app/controllers/RestaurantsController');
 const foodsController = require('../app/controllers/FoodsController');
@@ -17,6 +18,7 @@ router.post(
   '/:res_slug/foods/store',
   protect,
   requiredRoles('admin', 'manage'),
+  upload.single('image'),
   foodsController.store,
 );
 router.get(
@@ -29,6 +31,7 @@ router.put(
   '/:res_slug/foods/:food_id',
   protect,
   requiredRoles('admin', 'manage'),
+  upload.single('image'),
   foodsController.update,
 );
 router.delete(
@@ -66,6 +69,7 @@ router.post(
   '/create',
   protect,
   requiredRoles('admin'),
+  upload.single('image'),
   restaurantsController.create,
 );
 router.get(
@@ -78,6 +82,7 @@ router.put(
   '/:res_slug',
   protect,
   requiredRoles('admin', 'manage'),
+  upload.single('image'),
   restaurantsController.update,
 );
 router.delete(

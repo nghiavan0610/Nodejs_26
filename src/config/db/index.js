@@ -1,10 +1,16 @@
 const { Sequelize } = require('sequelize');
+const configs = require('../env/index');
 
-const sequelize = new Sequelize('app_food', 'root', '123456', {
-  host: 'localhost',
-  dialect: 'mysql',
-  port: '3306',
-});
+const sequelize = new Sequelize(
+  configs.DB_NAME,
+  configs.DB_USER,
+  configs.DB_PASSWORD,
+  {
+    dialect: configs.DB_DIALECT,
+    host: configs.DB_HOST,
+    port: configs.DB_PORT,
+  },
+);
 
 async function connect() {
   try {

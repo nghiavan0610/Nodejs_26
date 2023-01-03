@@ -27,12 +27,7 @@ Food.init(
       allowNull: false,
     },
     image: {
-      type: DataTypes.STRING,
-      validate: {
-        isUrl: {
-          msg: 'Invalid image URL',
-        },
-      },
+      type: DataTypes.TEXT('long'),
     },
     price: {
       type: DataTypes.FLOAT,

@@ -51,10 +51,15 @@ User.init(
       type: DataTypes.STRING,
       unique: true,
     },
+    avatar: {
+      type: DataTypes.TEXT('long'),
+    },
   },
   {
     sequelize,
     freezeTableName: true,
+    charset: 'utf8mb4',
+    collate: 'utf8mb4_unicode_ci',
     modelName: 'User',
     tableNames: 'users',
     defaultScope: {

@@ -3,6 +3,7 @@ const Food_type = require('../models/Food_type');
 const Restaurant = require('../models/Restaurant');
 const { QueryTypes, Op } = require('sequelize');
 const { sequelize } = require('../../config/db');
+const fs = require('fs');
 
 const {
   multipleSequelizeToJSON,
@@ -110,12 +111,17 @@ class FoodsController {
           throw new Error('Restaurant not found');
         }
 
+        const img = fs.readFileSync(req.file.path);
+        const encode_image = img.toString('base64');
+
+        req.body.image = encode_image;
         Food.create(req.body)
-          .then(() =>
-            res
-              .status(200)
-              .redirect('/restaurants/' + req.params.res_slug + '/foods'),
-          )
+          .then((food) => {
+            console.log(food),
+              res
+                .status(200)
+                .redirect('/restaurants/' + req.params.res_slug + '/foods');
+          })
           .catch(next);
       })
       .catch(next);
@@ -181,6 +187,10 @@ class FoodsController {
           throw new Error('Food not found');
         }
 
+        const img = fs.readFileSync(req.file.path);
+        const encode_image = img.toString('base64');
+
+        req.body.image = encode_image;
         restaurant.Food[0]
           .update(req.body)
           .then(() => {

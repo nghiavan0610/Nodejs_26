@@ -18,7 +18,7 @@ Restaurant.init(
       unique: true,
     },
     image: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT('long'),
     },
     desc: {
       type: DataTypes.STRING,

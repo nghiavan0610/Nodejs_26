@@ -5,8 +5,10 @@ const Food_type = require('../models/Food_type');
 const Order_detail = require('../models/Order_detail');
 const Like_res = require('../models/Like_res');
 const Rate_res = require('../models/Rate_res');
+
 const { QueryTypes } = require('sequelize');
 const { sequelize } = require('../../config/db');
+const fs = require('fs');
 
 const {
   multipleSequelizeToJSON,
@@ -58,7 +60,7 @@ class RestaurantsController {
       .catch(next);
   }
 
-  // [POST] /restaurants/store
+  // [POST] /restaurants/create
   create(req, res, next) {
     Restaurant.findOne({ where: { res_name: req.body.res_name } }).then(
       (resExists) => {
@@ -69,7 +71,11 @@ class RestaurantsController {
       },
     );
 
-    req.body.image = `https://img.youtube.com/vi/${req.body.videoID}/sddefault.jpg`;
+    const img = fs.readFileSync(req.file.path);
+    const encode_image = img.toString('base64');
+
+    req.body.image = encode_image;
+
     Restaurant.create(req.body)
       .then(() => res.status(200).redirect('/manage/stored/restaurants'))
       .catch(next);
@@ -94,8 +100,15 @@ class RestaurantsController {
   // [PUT] /restaurants/:res_slug
   update(req, res, next) {
     Promise.all([
-      Restaurant.findOne({ where: { slug: req.params.res_slug } }),
-      Restaurant.findOne({ where: { res_name: req.body.res_name } }),
+      Restaurant.findOne({
+        where: { slug: req.params.res_slug },
+      }),
+      Restaurant.findOne({
+        where: {
+          res_id: req.body.res_id,
+          res_name: req.body.res_name,
+        },
+      }),
     ])
       .then(([restaurant, checkRestaurant]) => {
         if (!restaurant) {
@@ -103,15 +116,35 @@ class RestaurantsController {
           throw new Error('Restaurant not found');
         }
 
+        const img = fs.readFileSync(req.file.path);
+        const encode_image = img.toString('base64');
+
+        req.body.image = encode_image;
+
         if (checkRestaurant) {
-          res.status(400);
-          throw new Error('Restaurant already exists');
+          restaurant
+            .update(req.body)
+            .then(() => res.status(200).redirect('/manage/stored/restaurants'))
+            .catch(next);
         }
 
-        restaurant
-          .update(req.body)
-          .then(() => res.status(200).redirect('/manage/stored/restaurants'))
-          .catch(next);
+        if (!checkRestaurant) {
+          Restaurant.findOne({ where: { res_name: req.body.res_name } })
+            .then((existedRes) => {
+              if (existedRes) {
+                res.status(409);
+                throw new Error('Restaurant already exists');
+              }
+
+              restaurant
+                .update(req.body)
+                .then(() =>
+                  res.status(200).redirect('/manage/stored/restaurants'),
+                )
+                .catch(next);
+            })
+            .catch(next);
+        }
       })
       .catch(next);
   }

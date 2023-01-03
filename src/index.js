@@ -8,6 +8,7 @@ const db = require('./config/db');
 const handlebars = require('express-handlebars');
 const methodOverride = require('method-override');
 const route = require('./routes');
+const configs = require('./config/env/index');
 
 app.use(methodOverride('_method'));
 
@@ -51,7 +52,7 @@ route(app);
 // Connect to db
 db.connect();
 
-const PORT = process.env.PORT || 3000;
+const PORT = configs.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

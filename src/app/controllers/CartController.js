@@ -102,7 +102,6 @@ class CartController {
       .catch(next);
   }
 
-
   // [POST] /cart/pay
   pay(req, res, next) {
     console.log(req.body);
@@ -116,13 +115,16 @@ class CartController {
       total_price: req.body.total_price,
       discount: req.body.discount,
     })
-    .then((order) => {
-      Order_detail.update({
-        order_id: order.order_id,
-      }, { where: {order_id: null}})
-    })
-    .next()
-    .catch(next);
+      .then((order) => {
+        Order_detail.update(
+          {
+            order_id: order.order_id,
+          },
+          { where: { order_id: null } },
+        );
+      })
+      .next()
+      .catch(next);
   }
 }
 

@@ -1,6 +1,26 @@
 <div class='mt-4'>
   <h3>Thay đổi thông tin của tôi</h3>
 
+  <div class="row align-items-between mt-4">
+
+    <div class="col">
+      <h5>Thay đổi avatar</h5>
+      <form method="POST" enctype="multipart/form-data" action="/profile/avatar/upload">
+        <div class="form-group">
+          <div class="flex-shrink-0">
+                <img src="data:image/jpeg;base64,{{user.avatar}}"
+                  alt="{{user.full_name}}" class="img-fluid"
+                  style="width: 180px; border-radius: 10px;">
+              </div>
+          <input type="file" class="form-control-file" name="avatar">
+          <br>
+          <button type='submit' class='btn btn-primary mt-4'>Lưu lại</button>
+        </div>
+      </form>
+    </div>
+
+  <div class="col">
+    <h5>Thay đổi thông tin</h5>
   <form method='POST' action='/profile/update?_method=PUT'>
     <div class='form-group'>
       <label for='user_name'>Tên người dùng</label>
@@ -37,5 +57,7 @@
 
     <button type='submit' class='btn btn-primary mt-4'>Lưu lại</button>
   </form>
+  </div>
 
+</div>
 </div>

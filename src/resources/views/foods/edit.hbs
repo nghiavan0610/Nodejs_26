@@ -4,6 +4,7 @@
 
   <form
     method='POST'
+    enctype="multipart/form-data"
     action='/restaurants/{{resSlug}}/foods/{{food.food_id}}?_method=PUT'
   >
 
@@ -45,16 +46,18 @@
       />
     </div>
 
-    <div class='form-group'>
-      <label for='image'>Hình ảnh</label>
-      <input
-        type='text'
-        class='form-control'
-        value='{{food.image}}'
-        id='image'
-        name='image'
-      />
+
+    <div class="form-group mt-4">
+      <div class="flex-shrink-0">
+        <label for="image">Hình ảnh</label>
+        <br>
+            <img src="data:image/jpeg;base64,{{food.image}}"
+              alt="{{food.food_name}}" class="img-fluid"
+              style="width: 180px; border-radius: 10px;">
+          </div>
+      <input type="file" class="form-control-file" id="image" name="image">
     </div>
+    
 
     <button type='submit' class='btn btn-primary mt-4'>Lưu lại</button>
   </form>
