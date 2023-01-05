@@ -35,7 +35,6 @@ Order.init(
     sequelize,
     freezeTableName: true,
     modelName: 'Order',
-    tableNames: 'orders',
     timestamps: true,
     paranoid: true,
   },

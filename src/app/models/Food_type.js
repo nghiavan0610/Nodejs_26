@@ -21,7 +21,6 @@ Food_type.init(
     sequelize,
     freezeTableName: true,
     modelName: 'Food_type',
-    tableNames: 'food_types',
     timestamps: false,
   },
 );

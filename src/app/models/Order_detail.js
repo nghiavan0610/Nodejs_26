@@ -44,7 +44,6 @@ Order_detail.init(
     sequelize,
     freezeTableName: true,
     modelName: 'Order_detail',
-    tableNames: 'order_details',
     timestamps: true,
     paranoid: true,
   },

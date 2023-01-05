@@ -33,7 +33,6 @@ Rate_res.init(
     sequelize,
     freezeTableName: true,
     modelName: 'Rate_res',
-    tableNames: 'rate_res',
     timestamps: true,
   },
 );

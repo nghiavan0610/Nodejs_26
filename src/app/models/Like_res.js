@@ -29,7 +29,6 @@ Like_res.init(
     sequelize,
     freezeTableName: true,
     modelName: 'Like_res',
-    tableNames: 'like_res',
     timestamps: true,
   },
 );

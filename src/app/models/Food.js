@@ -48,7 +48,6 @@ Food.init(
     sequelize,
     freezeTableName: true,
     modelName: 'Food',
-    tableNames: 'foods',
     timestamps: true,
     paranoid: true,
   },

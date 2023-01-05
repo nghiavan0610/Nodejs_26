@@ -35,7 +35,6 @@ Restaurant.init(
     sequelize,
     freezeTableName: true,
     modelName: 'Restaurant',
-    tableNames: 'restaurants',
     timestamps: true,
     paranoid: true,
   },
