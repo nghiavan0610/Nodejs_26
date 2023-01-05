@@ -3,6 +3,7 @@ require('dotenv').config();
 const configs = {
   PORT: process.env.PORT,
   JWT_SECRET: process.env.JWT_SECRET,
+  NODE_ENV: process.env.NODE_ENV,
 
   DB_USER: process.env.DB_USER,
   DB_PASSWORD: process.env.DB_PASSWORD,
